@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<extension xmlns="urn:newrelic-extension">
+  <instrumentation>
+    <tracerFactory>
+      <!-- This match lines up with the CanWrap in the accompanying assembly.  Both are required to get the API to work.  -->
+      <match assemblyName="System.Web.Mvc" className="System.Web.Mvc.ControllerActionInvoker">
+        <exactMethodMatcher methodName="InvokeActionMethod" />
+      </match>
+    </tracerFactory>
+  </instrumentation>
+</extension>
