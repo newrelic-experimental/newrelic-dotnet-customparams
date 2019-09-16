@@ -124,8 +124,6 @@ namespace Custom.Providers.Wrapper.AspNet
             }
             if (configuredCookies != null)
             {
-
-                agent.Logger.Log(Level.Info, "Custom AspNet Extension: Processing HTTP cookie" + configuredCookies.ToString() + "]");
                 object cookies = request?.GetType()?.GetProperty("Cookies")?.GetValue(request);
                 
                 foreach (var cCookie in configuredCookies)
