@@ -4,14 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Custom.Providers.Wrapper.AspNet</RootNamespace>
     <AssemblyName>Custom.Providers.Wrapper.AspNet</AssemblyName>
+    <Version>1.0.1</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NewRelic.Agent.Extensions" Version="8.16.567" />
-  </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy /y $(TargetPath) &quot;C:\Program Files\New Relic\.NET Agent\Extensions&quot;&#xD;&#xA;copy/y  $(ProjectDir)\Custom.Providers.Wrapper.AspNet.xml &quot;C:\ProgramData\New Relic\.NET Agent\Extensions&quot;" />
   </Target>
+
+  <ItemGroup>
+    <PackageReference Include="NewRelic.Agent.Extensions" Version="8.17.438" />
+  </ItemGroup>
 
 </Project>

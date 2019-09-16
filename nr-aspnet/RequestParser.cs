@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using NewRelic.Agent.Extensions.Providers.Wrapper;
+using System.Web;
 using System.Collections.Specialized;
+using NewRelic.Agent.Extensions.Providers.Wrapper;
 using NewRelic.Agent.Extensions.Logging;
 
 namespace Custom.Providers.Wrapper.AspNet
@@ -55,7 +56,7 @@ namespace Custom.Providers.Wrapper.AspNet
             string reqCookies = null;
             if (appSettings.TryGetValue("requestCookies", out reqCookies))
             {
-                configuredParams = reqCookies?.Split(',').Select(p => p.Trim()).ToArray<string>();
+                configuredCookies = reqCookies?.Split(',').Select(p => p.Trim()).ToArray<string>();
                 agent.Logger.Log(Level.Info, "Custom AspNet Extension: These HTTP cookies will be read and added to NewRelic transaction: " + "[" + String.Join(",", configuredCookies) + "]");
             }
             else
@@ -123,14 +124,20 @@ namespace Custom.Providers.Wrapper.AspNet
             }
             if (configuredCookies != null)
             {
+
+                agent.Logger.Log(Level.Info, "Custom AspNet Extension: Processing HTTP cookie" + configuredCookies.ToString() + "]");
                 object cookies = request?.GetType()?.GetProperty("Cookies")?.GetValue(request);
-                NameValueCollection cookieCollection = cookies as NameValueCollection;
+                
                 foreach (var cCookie in configuredCookies)
                 {
-                    string cookieValue = cookieCollection?.Get(cCookie);
-                    if (cookieValue != null)
+                    object httpCookieObject = cookies?.GetType()?.GetMethod("Get", new Type[] { typeof(string)}).Invoke(cookies, new object[] { cCookie });
+                    
+                    if (httpCookieObject != null)
                     {
-                        InternalApi.AddCustomParameter(prefix + cCookie, cookieValue);
+                        //Does this work for mulitple cookie values? Code probably needs review
+                        object cval = httpCookieObject?.GetType()?.GetProperty("Value")?.GetValue(httpCookieObject);
+                        InternalApi.AddCustomParameter(prefix + cCookie, cval.ToString());
+                        //agent.Logger.Log(Level.Info, "Custom AspNet Extension: Value of HTTP cookie" + cCookie + "]=" + cval);
                     }
                 }
             }

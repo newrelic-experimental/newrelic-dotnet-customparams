@@ -1,4 +1,5 @@
-﻿using NewRelic.Agent.Extensions.Providers.Wrapper;
+﻿
+using NewRelic.Agent.Extensions.Providers.Wrapper;
 using System;
 
 namespace Custom.Providers.Wrapper.AspNet
