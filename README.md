@@ -24,9 +24,11 @@ A custom extension for the New Relic .Net Framework agent to add custom transact
 
 ```xml
   # To collect custom request headers:
-  <add key="requestHeaders" value="SMUSER, myheader, SessionId" />
+  <add key="requestHeaders" value="ContentPref" />
   # To collect custom request parameters:
-  <add key="requestParams" value="age, height, weight" />
+  <add key="requestParams" value="city, country" />
+  #To collect custom cookies
+  <add key="requestCookies" value="SSOUSER, SSOSESSIONID" />
   # To set a prefix for the collected attributes
   # Leave blank or set to "blank" to have no prefix.
   # Default: ''
@@ -45,8 +47,9 @@ An Example snippet of newrelic.config with the above configuration looks like th
     <name>My Application</name>
   </application>
   <appSettings>
-    <add key="requestHeaders" value="SMUSER, SessionId" />
-    <add key="requestParams" value="age, height, weight" />
+    <add key="requestHeaders" value="ContentPref" />
+    <add key="requestParams" value="city, country" />
+	<add key="requestCookies" value="SSOUSER, SSOSESSIONID" />
   </appSettings>
   <log level="info" />
 ...
