@@ -4,16 +4,16 @@ A custom extension for the New Relic .Net Framework agent to add custom transact
 
 ## Installation
 
-1. Drop the extension dll in the newrelic agent's "extensions" folder.
+1. Drop the extension dll in the newrelic agent's Program Files "extensions" folder.
 
 ```cmd
-   copy Custom.Providers.Wrapper.AspNet.dll C:\Program Files\New Relic\.NET Agent\Extensions\
+   copy Custom.Providers.Wrapper.AspNet.dll C:\Program Files\New Relic\.NET Agent\netframework\Extensions
 ```
 
-2. Drop the extension xml in the newrelic agent's "extensions" folder.
+2. Drop the extension xml in the newrelic agent ProgramData "extensions" folder.
 
 ```cmd
-   copy Custom.Providers.Wrapper.AspNet.xml C:\ProgramData\New Relic\.NET Agent\Extensions
+   copy Custom.Providers.Wrapper.AspNet.xml C:\ProgramData\New Relic\.NET Agent\netframework\Extensions
 ```
 
 ***
@@ -47,9 +47,9 @@ An Example snippet of newrelic.config with the above configuration looks like th
     <name>My Application</name>
   </application>
   <appSettings>
-    <add key="requestHeaders" value="ContentPref" />
-    <add key="requestParams" value="city, country" />
-	<add key="requestCookies" value="SSOUSER, SSOSESSIONID" />
+    <add key="requestHeaders" value="ContentPref"/>
+    <add key="requestParams" value="city, country"/>
+	<add key="requestCookies" value="SSOUSER, SSOSESSIONID"/>
   </appSettings>
   <log level="info" />
 ...
