@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using System.Web;
 using System.Collections.Specialized;
-using NewRelic.Agent.Extensions.Providers.Wrapper;
 using NewRelic.Agent.Extensions.Logging;
+using NewRelic.Agent.Api;
 
 namespace Custom.Providers.Wrapper.AspNet
 {
