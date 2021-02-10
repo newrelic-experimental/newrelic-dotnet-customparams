@@ -1,28 +1,70 @@
 [![New Relic Experimental header](https://github.com/newrelic/opensource-website/raw/master/src/images/categories/Experimental.png)](https://opensource.newrelic.com/oss-category/#new-relic-experimental)
 
-# [Project Name] [build badges go here when available]
+# Asp .Net - Adding Custom Transaction Parameters
 
->[Brief description - what is the project and value does it provide? How often should users expect to get releases? How is versioning set up? Where does this project want to go?]
+A custom extension for the New Relic .Net Framework agent to add custom transaction parameters from configured ASP .Net Http Request query string and form parameters, headers and cookies.
 
 ## Installation
 
-> [Include a step-by-step procedure on how to get your code installed. Be sure to include any third-party dependencies that need to be installed separately]
+1. Drop the extension dll in the newrelic agent's Program Files "extensions" folder.
 
-## Getting Started
+```cmd
+   copy Custom.Providers.Wrapper.AspNet.dll C:\Program Files\New Relic\.NET Agent\netframework\Extensions
+```
 
->[Simple steps to start working with the software similar to a "Hello World"]
+2. Drop the extension xml in the newrelic agent ProgramData "extensions" folder.
 
-## Usage
+```cmd
+   copy Custom.Providers.Wrapper.AspNet.xml C:\ProgramData\New Relic\.NET Agent\netframework\Extensions
+```
 
->[**Optional** - Include more thorough instructions on how to use the software. This section might not be needed if the Getting Started section is enough. Remove this section if it's not needed.]
+***
+**Note: The XML file must be dropped into ProgramData's extension folder whereas DLL file must be dropped into Program Files's extension folder**
+***
 
-## Building
+3. Edit the newrelic agent's configuration file (`newrelic.config`) and add the following properties as applicable to the `appSettings` element:
 
->[**Optional** - Include this section if users will need to follow specific instructions to build the software from source. Be sure to include any third party build dependencies that need to be installed separately. Remove this section if it's not needed.]
+```xml
+  # To collect custom request headers:
+  <add key="requestHeaders" value="ContentPref" />
+  # To collect custom request parameters:
+  <add key="requestParams" value="city, country" />
+  #To collect custom cookies
+  <add key="requestCookies" value="SSOUSER, SSOSESSIONID" />
+  # To set a prefix for the collected attributes
+  # Leave blank or set to "blank" to have no prefix.
+  # Default: ''
+  <add key="prefix" value="" />
+```
 
-## Testing
+An Example snippet of newrelic.config with the above configuration looks like this
 
->[**Optional** - Include instructions on how to run tests if we include tests with the codebase. Remove this section if it's not needed.]
+```xml
+<?xml version="1.0"?>
+<!-- Copyright (c) 2008-2017 New Relic, Inc.  All rights reserved. -->
+<!-- For more information see: https://newrelic.com/docs/dotnet/dotnet-agent-configuration -->
+<configuration xmlns="urn:newrelic-config" agentEnabled="true">
+  <service licenseKey="???" />
+  <application>
+    <name>My Application</name>
+  </application>
+  <appSettings>
+    <add key="requestHeaders" value="ContentPref"/>
+    <add key="requestParams" value="city, country"/>
+	<add key="requestCookies" value="SSOUSER, SSOSESSIONID"/>
+  </appSettings>
+  <log level="info" />
+...
+```
+4. Restart your application after adding the extension files and configurations.
+3. Check your [results](#results)!
+
+## Results
+
+The instrumentation will add the extracted headers and/or parameters as custom transaction parameters, which are found in these places:
+
+- APM Transaction Traces (both distributed traces and classic) in the "Attributes" section
+- Transaction events in Insights
 
 ## Support
 
