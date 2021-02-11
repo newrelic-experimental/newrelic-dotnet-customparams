@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <RootNamespace>Custom.Providers.Wrapper.AspNet</RootNamespace>
     <AssemblyName>Custom.Providers.Wrapper.AspNet</AssemblyName>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NewRelic.Agent.Extensions" Version="8.21.34" />
+    <PackageReference Include="NewRelic.Agent.Extensions" Version="8.34.0" />
   </ItemGroup>
 
 </Project>
