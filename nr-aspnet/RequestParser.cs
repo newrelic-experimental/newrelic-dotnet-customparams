@@ -89,7 +89,6 @@ namespace Custom.Providers.Wrapper.AspNet
                     string headerValue = headerCollection?.Get(cHeader);
                     if (headerValue != null)
                     {
-                        //InternalApi.AddCustomParameter(prefix + cHeader, headerValue);
                        agent.CurrentTransaction.AddCustomAttribute(prefix + cHeader, headerValue);
 
                     }
@@ -113,13 +112,11 @@ namespace Custom.Providers.Wrapper.AspNet
                     string paramValue = queryStringParamCollection?.Get(cParam);
                     if (paramValue != null)
                     {
-                        //InternalApi.AddCustomParameter(prefix + cParam, paramValue);
                         agent.CurrentTransaction.AddCustomAttribute(prefix + cParam, paramValue);
                     }
                     paramValue = formParamCollection?.Get(cParam);
                     if (paramValue != null)
                     {
-                        //InternalApi.AddCustomParameter(prefix + cParam, paramValue);
                         agent.CurrentTransaction.AddCustomAttribute(prefix + cParam, paramValue);
                     }
                 }
@@ -136,7 +133,6 @@ namespace Custom.Providers.Wrapper.AspNet
                     {
                         //Does this work for mulitple cookie values? Code probably needs review
                         object cval = httpCookieObject?.GetType()?.GetProperty("Value")?.GetValue(httpCookieObject);
-                        //InternalApi.AddCustomParameter(prefix + cCookie, cval.ToString());
                         agent.CurrentTransaction.AddCustomAttribute(prefix + cCookie, cval.ToString());
                         //agent.Logger.Log(Level.Info, "Custom AspNet Extension: Value of HTTP cookie" + cCookie + "]=" + cval);
                     }

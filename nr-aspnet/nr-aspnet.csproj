@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NewRelic.Agent.Extensions" Version="8.34.0" />
+    <Reference Include="NewRelic.Agent.Extensions">
+      <HintPath>.\lib\NewRelic.Agent.Extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
