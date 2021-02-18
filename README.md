@@ -34,7 +34,7 @@ A custom extension for the New Relic .Net Framework agent to add custom transact
   # To set a prefix for the collected attributes
   # Leave blank or set to "blank" to have no prefix.
   # Default: ''
-  <add key="prefix" value="" />
+  <add key="prefix" value="request." />
 ```
 
 An Example snippet of newrelic.config with the above configuration looks like this
