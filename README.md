@@ -25,8 +25,10 @@ A custom extension for the New Relic .Net Framework agent to add custom transact
 3. Edit the newrelic agent's configuration file (`newrelic.config`) and add the following properties as applicable to the `appSettings` element:
 
 ```xml
+  # To collect full request Url
+  <add key="requestProperties" value="Url"/>
   # To collect custom request headers:
-  <add key="requestHeaders" value="ContentPref" />
+  <add key="requestHeaders" value="Origin" />
   # To collect custom request parameters:
   <add key="requestParams" value="city, country" />
   #To collect custom cookies
@@ -49,9 +51,11 @@ An Example snippet of newrelic.config with the above configuration looks like th
     <name>My Application</name>
   </application>
   <appSettings>
-    <add key="requestHeaders" value="ContentPref"/>
+    <add key="requestProperties" value="Url"/>
+    <add key="requestHeaders" value="Origin"/>
     <add key="requestParams" value="city, country"/>
 	<add key="requestCookies" value="SSOUSER, SSOSESSIONID"/>
+	<add key="prefix" value="request." />
   </appSettings>
   <log level="info" />
 ...

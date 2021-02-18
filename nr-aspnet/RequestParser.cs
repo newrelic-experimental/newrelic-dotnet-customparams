@@ -15,6 +15,7 @@ namespace Custom.Providers.Wrapper.AspNet
         /// <summary>
         /// Store the header names read from the newrelic.config file 
         /// </summary>
+        private string[] configuredRequestProperties = null;
         private string[] configuredHeaders = null;
         private string[] configuredParams = null;
         private string[] configuredCookies = null;
@@ -31,6 +32,17 @@ namespace Custom.Providers.Wrapper.AspNet
         {
             /// Read and setup the configured headers from newrelic.config file
             IReadOnlyDictionary<string, string> appSettings = agent.Configuration.GetAppSettings();
+
+            string reqPropeties = null;
+            if (appSettings.TryGetValue("requestProperties", out reqPropeties))
+            {
+                configuredRequestProperties = reqPropeties?.Split(',').Select(p => p.Trim()).ToArray<string>();
+                agent.Logger.Log(Level.Info, "Custom AspNet Extension: These HTTP request properties will be read and added to NewRelic transaction: " + "[" + String.Join(",", configuredRequestProperties) + "]");
+            }
+            else
+            {
+                configuredRequestProperties = null;
+            }
             string reqHeaders = null;
             if (appSettings.TryGetValue("requestHeaders", out reqHeaders))
             {
@@ -81,6 +93,27 @@ namespace Custom.Providers.Wrapper.AspNet
             if (!initialized)
             {
                 init();
+            }
+            if (configuredRequestProperties != null)
+            {
+                foreach (var cRequestProperty in configuredRequestProperties)
+                {
+                    object requestPropertyValue = request?.GetType()?.GetProperty(cRequestProperty)?.GetValue(request);
+                    string requestPropertyValueStr;
+                    if (cRequestProperty.Equals("Url"))
+                    {
+                        Uri requestUrl = requestPropertyValue as Uri;
+                        requestPropertyValueStr = requestUrl.AbsoluteUri;
+                    } else
+                    {
+                        requestPropertyValueStr = requestPropertyValue as string;
+                    }
+
+                    if (requestPropertyValueStr != null)
+                    {
+                        agent.CurrentTransaction.AddCustomAttribute(prefix + cRequestProperty, requestPropertyValueStr);
+                    }
+                }
             }
             if (configuredHeaders != null)
             {
