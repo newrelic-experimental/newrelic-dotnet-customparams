@@ -20,6 +20,8 @@ namespace Custom.Providers.Wrapper.AspNet
         private string[] configuredCookies = null;
         private string prefix = null;
 
+        private string ORIGINHEADER = "OriginHost";
+
         public RequestParser(IAgent agent)
         {
             this.agent = agent;
@@ -92,6 +94,19 @@ namespace Custom.Providers.Wrapper.AspNet
                        agent.CurrentTransaction.AddCustomAttribute(prefix + cHeader, headerValue);
 
                     }
+                    // Special logic for ivanta
+                    if (cHeader.Equals("Origin", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (headerValue != null)
+                        {
+                            agent.CurrentTransaction.AddCustomAttribute(prefix + ORIGINHEADER, headerValue);
+                        } else
+                        {
+                            headerValue = headerCollection?.Get("Host");
+                            agent.CurrentTransaction.AddCustomAttribute(prefix + ORIGINHEADER, headerValue ?? "null");
+                        }
+                    }
+                    // End special logic
                 }
             }
             if (configuredParams != null)
@@ -131,7 +146,7 @@ namespace Custom.Providers.Wrapper.AspNet
                     
                     if (httpCookieObject != null)
                     {
-                        //Does this work for mulitple cookie values? Code probably needs review
+                        //Does this work for mulitple cookie values? 
                         object cval = httpCookieObject?.GetType()?.GetProperty("Value")?.GetValue(httpCookieObject);
                         agent.CurrentTransaction.AddCustomAttribute(prefix + cCookie, cval.ToString());
                         //agent.Logger.Log(Level.Info, "Custom AspNet Extension: Value of HTTP cookie" + cCookie + "]=" + cval);
