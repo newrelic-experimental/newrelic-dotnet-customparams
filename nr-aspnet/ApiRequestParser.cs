@@ -23,6 +23,9 @@ namespace Custom.Providers.Wrapper.AspNet
         private string prefix = null; 
         private const string REQUEST_URI_PROP_NAME = "RequestUri";
         private const string URL_PROP_NAME = "Url";
+        private const string CONTAINS_METHOD_NAME = "Contains";
+        private const string GET_VALUES_METHOD_NAME = "GetValues";
+        private const string COMMA_DELIMITER = ",";
 
         public ApiRequestParser(IAgent agent)
         {
@@ -97,11 +100,14 @@ namespace Custom.Providers.Wrapper.AspNet
                 object headers = request?.GetType()?.GetProperty("Headers")?.GetValue(request);
                 foreach (var cHeader in configuredHeaders)
                 {
-                    object headerValueObject = headers.GetType()?.GetMethod("GetValues", new Type[] { typeof(string) })?.Invoke(headers, new object[] { cHeader });
-                    if (headerValueObject != null)
+                    MethodInfo containsMethod = headers.GetType()?.GetMethod(CONTAINS_METHOD_NAME, new Type[] { typeof(string) });
+                    object ok = containsMethod?.Invoke(headers, new object[] { cHeader });
+                    if ((bool) ok)
                     {
+                        MethodInfo getValuesMethod = headers.GetType()?.GetMethod(GET_VALUES_METHOD_NAME, new Type[] { typeof(string) });
+                        object headerValueObject = getValuesMethod?.Invoke(headers, new object[] { cHeader });
                         IEnumerable<string> strs = headerValueObject as IEnumerable<string>;
-                        string headerValue = string.Join(",", strs.ToArray<string>());
+                        string headerValue = string.Join(COMMA_DELIMITER, strs.ToArray<string>());
                         if (headerValue != null)
                         {
                             agent.CurrentTransaction.AddCustomAttribute(prefix + cHeader, headerValue);
