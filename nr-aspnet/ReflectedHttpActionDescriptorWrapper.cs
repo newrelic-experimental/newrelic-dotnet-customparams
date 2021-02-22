@@ -1,18 +1,19 @@
-﻿
-using NewRelic.Agent.Api;
+﻿using NewRelic.Agent.Api;
 using NewRelic.Agent.Extensions.Providers.Wrapper;
 using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Custom.Providers.Wrapper.AspNet
 {
-    public class InvokeActionMethodWrapper : IWrapper
+    public class ReflectedHttpActionDescriptorWrapper : IWrapper
     {
-        private const string AssemblyName = "System.Web.Mvc";
-        private const string TypeName = "System.Web.Mvc.ControllerActionInvoker";
-        private const string MethodName = "InvokeActionMethod";
-        private const string HTTPCONTEXT_PROP_NAME = "HttpContext";
+        private const string AssemblyName = "System.Web.Http";
+        private const string TypeName = "System.Web.Http.Controllers.ReflectedHttpActionDescriptor";
+        private const string MethodName = "ExecuteAsync";
         private const string REQUEST_PROP_NAME = "Request";
-        private MvcRequestParser requestParser = null;
+        private ApiRequestParser requestParser;
+
 
         public bool IsTransactionRequired => true;
 
@@ -28,29 +29,19 @@ namespace Custom.Providers.Wrapper.AspNet
             return new CanWrapResponse(canWrap);
         }
 
-
-        /// <summary>
-        /// 
-        /// Executes before the InvokeActionMethod execution to look up configured headers and adds to current transaction as custom parameters
-        /// </summary>
-        /// <param name="instrumentedMethodCall">The method that was called.</param>
-        /// <param name="agent">Agent Wrapper API.</param>
-        /// <param name="transaction">Transaction Wrapper API</param>
-        /// <returns></returns>
         public AfterWrappedMethodDelegate BeforeWrappedMethod(InstrumentedMethodCall instrumentedMethodCall,
             IAgent agent, ITransaction transaction)
         {
-            requestParser = requestParser ?? new MvcRequestParser(agent);
+            requestParser = requestParser ?? new ApiRequestParser(agent);
 
             object[] methodArgs = instrumentedMethodCall.MethodCall.MethodArguments;
             if (methodArgs.Length > 0)
             {
-                //Effectively calling something like this below: object request = controllerContext.HttpContext.Request"); 
+                //Effectively calling something like this below: object request = controllerContext.Request"); 
                 object controllerContextObject = methodArgs[0];
                 if (controllerContextObject == null)
                     throw new NullReferenceException(nameof(controllerContextObject));
-                object httpContext = controllerContextObject?.GetType()?.GetProperty(HTTPCONTEXT_PROP_NAME)?.GetValue(controllerContextObject);
-                object request = httpContext?.GetType()?.GetProperty(REQUEST_PROP_NAME)?.GetValue(httpContext);
+                object request = controllerContextObject?.GetType()?.GetProperty(REQUEST_PROP_NAME)?.GetValue(controllerContextObject);
                 requestParser.parse(request);
             }
 
@@ -64,6 +55,6 @@ namespace Custom.Providers.Wrapper.AspNet
             {
             }
         }
-    }
 
+    }
 }

@@ -7,7 +7,7 @@ using NewRelic.Agent.Api;
 
 namespace Custom.Providers.Wrapper.AspNet
 {
-    public class RequestParser
+    public class MvcRequestParser
     {
         private IAgent agent;
         private bool initialized = false;
@@ -21,9 +21,7 @@ namespace Custom.Providers.Wrapper.AspNet
         private string[] configuredCookies = null;
         private string prefix = null;
 
-        private string ORIGINHEADER = "OriginHost";
-
-        public RequestParser(IAgent agent)
+        public MvcRequestParser(IAgent agent)
         {
             this.agent = agent;
         }
@@ -127,19 +125,6 @@ namespace Custom.Providers.Wrapper.AspNet
                        agent.CurrentTransaction.AddCustomAttribute(prefix + cHeader, headerValue);
 
                     }
-                    // Special logic for ivanta
-                    if (cHeader.Equals("Origin", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        if (headerValue != null)
-                        {
-                            agent.CurrentTransaction.AddCustomAttribute(prefix + ORIGINHEADER, headerValue);
-                        } else
-                        {
-                            headerValue = headerCollection?.Get("Host");
-                            agent.CurrentTransaction.AddCustomAttribute(prefix + ORIGINHEADER, headerValue ?? "null");
-                        }
-                    }
-                    // End special logic
                 }
             }
             if (configuredParams != null)

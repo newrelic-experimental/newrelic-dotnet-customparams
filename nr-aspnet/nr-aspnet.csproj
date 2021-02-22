@@ -13,4 +13,8 @@
     </Reference>
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /Y /R $(TargetPath) &quot;C:\Program Files\New Relic\.NET Agent\netframework\Extensions&quot;&#xD;&#xA;&#xD;&#xA;xcopy /Y  $(ProjectDir)Custom.Providers.Wrapper.AspNet.xml &quot;C:\ProgramData\New Relic\.NET Agent\Extensions\netframework&quot;&#xD;&#xA;" />
+  </Target>
+
 </Project>
