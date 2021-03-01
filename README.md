@@ -9,13 +9,13 @@ A custom extension for the New Relic .Net Framework agent to add custom transact
 1. Drop the extension dll in the newrelic agent's Program Files "extensions" folder.
 
 ```cmd
-   copy Custom.Providers.Wrapper.AspNet.dll C:\Program Files\New Relic\.NET Agent\netframework\Extensions
+   copy Custom.Providers.Wrapper.Asp35.dll C:\Program Files\New Relic\.NET Agent\netframework\Extensions
 ```
 
 2. Drop the extension xml in the newrelic agent ProgramData "extensions" folder.
 
 ```cmd
-   copy Custom.Providers.Wrapper.AspNet.xml C:\ProgramData\New Relic\.NET Agent\netframework\Extensions
+   copy Custom.Providers.Wrapper.Asp35.xml C:\ProgramData\New Relic\.NET Agent\netframework\Extensions
 ```
 
 ***
