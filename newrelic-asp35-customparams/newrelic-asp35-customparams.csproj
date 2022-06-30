@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NewRelic.Agent.Extensions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=f7f92cc5c2dc8743, processorArchitecture=MSIL">
+    <Reference Include="NewRelic.Agent.Extensions, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\NewRelic.Agent.Extensions.dll</HintPath>
     </Reference>
